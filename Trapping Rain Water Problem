@@ -1,0 +1,42 @@
+//O(n)
+//Run on GfG Practice
+class Solution{
+    
+    // arr: input array
+    // n: size of array
+    // Function to find the trapped water between the blocks.
+    static long trappingWater(int array[], int n) { 
+        // Your code here
+        int elevation = array[0];
+        long water = 0;
+        for(int i=0;i<n;i++){
+            if(array[i] >= elevation){
+                elevation = array[i];
+            }else {
+                boolean flag = false;
+                int nextMax = 0;
+                for(int j=i+1;j<n;j++){
+                    if(array[j] >= elevation){
+                        flag = true;
+                        break;
+                    }
+                    if(array[j] > nextMax){
+                        nextMax = array[j];
+                    }
+                }
+                if(flag){
+                    while(array[i] < elevation){
+                        water += elevation - array[i];
+                        i++;
+                    }
+                    i--;
+                }else{
+                    elevation = nextMax > array[i] ? nextMax : array[i] ;
+                    water += elevation - array[i];
+                }
+                
+            }
+        }
+        return water;
+    } 
+}
