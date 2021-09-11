@@ -1,0 +1,32 @@
+//O(n)
+//Executed on GFG practice
+class Solution{
+    public static int doUnion(int a[], int n, int b[], int m) 
+    {
+        //Your code here
+        HashMap<Integer,Integer> union = new HashMap<>();
+        int i=0, j=0, index=0;
+        while(i<n && j<m){
+            if(a[i] < b[j]){
+                union.put(a[i],0);
+                index++;
+                i++;
+            }else{
+                union.put(b[j],0);
+                index++;
+                j++;
+            }
+        }
+        while(i<n){
+            union.put(a[i],0);
+            index++;
+            i++;
+        }
+        while(j<m){
+            union.put(b[j],0);
+            index++;
+            j++;
+        }
+        return union.size();
+    }
+}
