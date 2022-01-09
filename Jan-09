@@ -1,0 +1,185 @@
+//Practice Implementation of LinkedList, Graph adjacency list, Stack, Queue, DFS, BFS and Dijkstra's Algorithm for undirected unweighted graph
+import java.io.*;
+import java.util.ArrayList;
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Graph graph = new Graph(6);
+        graph.addEdge(0,1);
+        graph.addEdge(0,3);
+        graph.addEdge(1,2);
+        graph.addEdge(2,3);
+        graph.addEdge(3,4);
+        graph.addEdge(4,5);
+        graph.dijkstra(5);
+    }     
+}
+class Graph{
+    ArrayList<ArrayList<Integer>> adjacencyList;
+    boolean visited[];
+    int n;
+    Graph(int n){
+        this.n = n;
+        visited = new boolean[n];
+        adjacencyList = new ArrayList<>(n);
+        for(int i=0;i<n;i++){
+            adjacencyList.add(new ArrayList<>());
+        }
+    }
+    void addEdge(int u, int v){
+        adjacencyList.get(u).add(v);
+        adjacencyList.get(v).add(u);
+    }
+    void dijkstra(int s){
+        System.out.println("Source: "+s);
+        int dist[] = new int[this.n];
+        boolean locked[] = new boolean[this.n];
+        for(int i=0;i<n;i++){
+            dist[i] = 999;
+            locked[i] = false;
+        }
+        dist[s] = 0;
+        for(int i=0;i<n;i++){
+            s = getMin(dist, locked);
+            locked[s] = true;
+            for(int j=0;j<adjacencyList.get(s).size();j++){
+                if(!locked[adjacencyList.get(s).get(j)] && dist[s] + 1 < dist[adjacencyList.get(s).get(j)]){
+                    dist[adjacencyList.get(s).get(j)] = dist[s] + 1;
+                }
+            }
+        }
+        for(int i=0;i<n;i++){
+            System.out.println("Distance to "+i+" is "+dist[i]);
+        }
+    }
+    int getMin(int[] dist, boolean[] locked){
+        int min = Integer.MAX_VALUE;
+        int index = -1;
+        for(int i=0;i<dist.length;i++){
+            if(!locked[i] && dist[i] < min){
+                min = dist[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+    void printAdjacencyList(){
+        for(int i=0;i<n;i++){
+            System.out.print(i+": ");
+            for(int j=0;j<adjacencyList.get(i).size();j++){
+                System.out.print(adjacencyList.get(i).get(j)+" ");
+            }
+            System.out.println();
+        }
+    }
+    void depthFirstSearch(int n){
+        for(int i=0;i<this.n;i++){
+            visited[i] = false;
+        }
+        Stack1 stack = new Stack1(this.n);
+        stack.push(n);
+        DFS(stack);
+    }
+    void DFS(Stack1 stack){
+        if(stack.isEmpty()){
+            return;
+        }
+        int n = stack.getTop();
+        visited[n] = true;
+        System.out.println(n);
+        for(int i=0;i<adjacencyList.get(n).size();i++){
+            if(!visited[adjacencyList.get(n).get(i)]){
+                stack.push(adjacencyList.get(n).get(i));
+                DFS(stack);
+            }
+        }
+        stack.pop();
+    }
+    void breadthFirstSearch(int n){
+        for(int i=0;i<this.n;i++){
+            visited[i] = false;
+        }
+        Queue1 queue = new Queue1(this.n);
+        queue.push(n);
+        BFS(queue);
+    }
+    void BFS(Queue1 queue){
+        if(queue.isEmpty()){
+            return;
+        }
+        int n = queue.pop();
+        if(!visited[n]){
+            visited[n] = true;
+            System.out.println(n);
+        }
+        for(int i=0;i<adjacencyList.get(n).size();i++){
+            if(!visited[adjacencyList.get(n).get(i)]){
+                visited[adjacencyList.get(n).get(i)] = true;
+                System.out.println(adjacencyList.get(n).get(i));
+                queue.push(adjacencyList.get(n).get(i));
+            }
+        }
+        BFS(queue);
+    }
+}
+class Queue1 {
+    int queue[];
+    int front, rear;
+    Queue1(int n){
+        queue = new int[n];
+        front = -1;
+        rear = 0;
+    }
+    void printQueue(){
+        System.out.print("Queue: ");
+        for(int i=front;i<rear;i++){
+            System.out.print(queue[i]+" ");
+        }
+        System.out.println();
+    }
+    void push(int n){
+        queue[rear++] = n;
+        if(front == -1){
+            front = 0;
+        }
+    }
+    int pop(){
+        int data = queue[front];
+        front++;
+        return data;
+    }
+    boolean isEmpty(){
+        if(front == -1 || front == rear){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+class Stack1 {
+    int stack[];
+    int top;
+    Stack1(int n){
+        stack = new int[n];
+        top = -1;
+    }
+    void push(int n){
+        top++;
+        stack[top] = n;
+    }
+    int pop(){
+        int data = stack[top];
+        top--;
+        return data;
+    }
+    int getTop(){
+        return stack[top];
+    }
+    boolean isEmpty(){
+        if(top == -1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
